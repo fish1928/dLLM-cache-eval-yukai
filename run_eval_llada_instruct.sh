@@ -20,7 +20,9 @@ FOLDER_OUT=${FOLDER_OUT:-results_baseline_eval/llada_instruct}
 source eval_common.sh
 
 run_llada_task gsm8k          4   "block_length=8,gen_length=256,steps=256,cfg_scale=0.0"               "prompt_interval_steps=50,gen_interval_steps=7"                -           --apply_chat_template --fewshot_as_multiturn
-run_llada_task minerva_math   0   "block_length=256,gen_length=256,steps=256,cfg_scale=0.0"             "prompt_interval_steps=50,gen_interval_steps=1,cfg_interval_steps=1" -     --apply_chat_template
+# minerva length follows the dllm-meta spec (512, official used 256); the
+# official full block (block_length == gen_length) scales with it
+run_llada_task minerva_math   0   "block_length=512,gen_length=512,steps=512,cfg_scale=0.0"             "prompt_interval_steps=50,gen_interval_steps=1,cfg_interval_steps=1" -     --apply_chat_template
 run_llada_task bbh            3   "block_length=256,gen_length=256,steps=256,cfg_scale=0.0"             "prompt_interval_steps=50,gen_interval_steps=6,cfg_interval_steps=1" -     --apply_chat_template --fewshot_as_multiturn
 run_llada_task mbpp           3   "block_length=32,gen_length=512,steps=512,cfg_scale=0.0,remasking=low_confidence" "prompt_interval_steps=100,gen_interval_steps=5"   -           --confirm_run_unsafe_code --apply_chat_template --fewshot_as_multiturn
 run_llada_task humaneval      0   "block_length=32,gen_length=512,steps=512,cfg_scale=0.0"              "prompt_interval_steps=50,gen_interval_steps=8"                add_bos_token=True --confirm_run_unsafe_code

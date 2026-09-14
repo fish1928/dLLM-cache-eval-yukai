@@ -28,6 +28,17 @@
 #   FOLDER_OUT            results root (default results_baseline_eval/<thread>)
 #################################################
 
+# CANONICAL dllm-meta generation-length spec -- every baseline eval (this repo
+# and future ones: fast-dllm, dkv, flashdlm) uses these lengths per task so
+# results are comparable with the dllm-meta harness sweeps. ifeval/followbench
+# are dllm-meta-only (oracle/router work) and are NOT run in baseline evals.
+#   gsm8k          256   (dream: gsm8k_cot)
+#   minerva_math   512
+#   bbh            256
+#   mbpp           512
+#   humaneval      512
+#   truthfulqa_gen 256
+
 export HF_ALLOW_CODE_EVAL=1
 export HF_DATASETS_TRUST_REMOTE_CODE=1
 
