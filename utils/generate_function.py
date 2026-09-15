@@ -46,6 +46,15 @@ def generate(
         )
         x[:, :prompt_length] = input_ids
 
+        # BUGFIX (upstream): the caller's attention_mask covers the PROMPT only
+        # (tok_batch_encode pads prompts to 'longest'), but every forward below
+        # runs on the full prompt+gen canvas -> extend with ones over the
+        # generated region (the mask exists only to hide left padding).
+        # Without this, any run crashes in scaled_dot_product_attention with
+        # "size of tensor a (prompt+gen) must match tensor b (prompt)".
+        if attention_mask is not None and attention_mask.shape[1] == prompt_length:
+            attention_mask = F.pad(attention_mask, (0, gen_length), value=1)
+
         prompt_index = x != mask_id
 
         assert gen_length % block_length == 0
